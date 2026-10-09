@@ -1,12 +1,19 @@
 import { useState } from 'react';
 import { DEFAULT_AVAILABLE_TIMES, DEFAULT_OCCASIONS } from '../constants';
 
-const getTodayDateString = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+import {
+  getTodayDateString,
+  validateDate,
+  validateTime,
+  validateGuests,
+  validateOccasion,
+} from '../utils/validation';
+
+export {
+  validateDate,
+  validateTime,
+  validateGuests,
+  validateOccasion,
 };
 
 function BookingForm({
@@ -28,11 +35,10 @@ function BookingForm({
 
   const minDate = getTodayDateString();
 
-  const guestsNum = Number(guests);
-  const isDateValid = Boolean(date && date.trim() !== '');
-  const isTimeValid = Boolean(time && time.trim() !== '');
-  const isGuestsValid = guests !== '' && !isNaN(guestsNum) && guestsNum >= 1 && guestsNum <= 10;
-  const isOccasionValid = Boolean(occasion && occasion.trim() !== '');
+  const isDateValid = validateDate(date);
+  const isTimeValid = validateTime(time);
+  const isGuestsValid = validateGuests(guests);
+  const isOccasionValid = validateOccasion(occasion);
 
   const isFormValid = isDateValid && isTimeValid && isGuestsValid && isOccasionValid;
 

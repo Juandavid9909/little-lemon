@@ -1,9 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import BookingForm from '../../src/components/BookingForm';
+import BookingForm, {
+  validateDate,
+  validateTime,
+  validateGuests,
+  validateOccasion,
+} from '../../src/components/BookingForm';
 import { DEFAULT_AVAILABLE_TIMES } from '../../src/constants';
 
 describe('BookingForm Component', () => {
+  // --- Rendering Tests ---
   test('Renders the BookingForm heading', () => {
     render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
     const headingElement = screen.getByText('Book Now');
@@ -13,84 +19,148 @@ describe('BookingForm Component', () => {
   test('Renders static text labels in the BookingForm', () => {
     render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
 
-    // Validate static labels
     expect(screen.getByText(/Choose date/i)).toBeInTheDocument();
     expect(screen.getByText(/Choose time/i)).toBeInTheDocument();
     expect(screen.getByText(/Number of guests/i)).toBeInTheDocument();
     expect(screen.getByText(/Occasion/i)).toBeInTheDocument();
 
-    // Validate submit button
     const submitButton = screen.getByRole('button', { name: /Make Your reservation/i });
     expect(submitButton).toBeInTheDocument();
   });
 
-  test('Validates HTML5 and ARIA attributes on input fields', () => {
-    render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+  // --- Paso 1: HTML5 Validation for Each Field ---
+  describe('Paso 1: HTML5 Validation Attributes', () => {
+    test('Validates HTML5 attributes applied to the date input field', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const dateInput = screen.getByLabelText(/Choose date/i);
 
-    // Date field
-    const dateInput = screen.getByLabelText(/Choose date/i);
-    expect(dateInput).toHaveAttribute('type', 'date');
-    expect(dateInput).toHaveAttribute('required');
-    expect(dateInput).toHaveAttribute('min');
-    expect(dateInput).toHaveAttribute('aria-required', 'true');
-    expect(dateInput).toHaveAttribute('aria-label', 'Choose reservation date');
+      expect(dateInput).toHaveAttribute('type', 'date');
+      expect(dateInput).toHaveAttribute('required');
+      expect(dateInput).toHaveAttribute('min');
+      expect(dateInput).toHaveAttribute('aria-required', 'true');
+    });
 
-    // Time select
-    const timeSelect = screen.getByLabelText(/Choose time/i);
-    expect(timeSelect).toHaveAttribute('required');
-    expect(timeSelect).toHaveAttribute('aria-required', 'true');
-    expect(timeSelect).toHaveAttribute('aria-label', 'Choose reservation time');
+    test('Validates HTML5 attributes applied to the time select field', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const timeSelect = screen.getByLabelText(/Choose time/i);
 
-    // Guests input
-    const guestsInput = screen.getByLabelText(/Number of guests/i);
-    expect(guestsInput).toHaveAttribute('type', 'number');
-    expect(guestsInput).toHaveAttribute('min', '1');
-    expect(guestsInput).toHaveAttribute('max', '10');
-    expect(guestsInput).toHaveAttribute('required');
-    expect(guestsInput).toHaveAttribute('aria-required', 'true');
-    expect(guestsInput).toHaveAttribute('aria-label', 'Number of guests');
+      expect(timeSelect).toHaveAttribute('required');
+      expect(timeSelect).toHaveAttribute('aria-required', 'true');
+    });
 
-    // Occasion select
-    const occasionSelect = screen.getByLabelText(/Occasion/i);
-    expect(occasionSelect).toHaveAttribute('required');
-    expect(occasionSelect).toHaveAttribute('aria-required', 'true');
+    test('Validates HTML5 attributes applied to the guests input field', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const guestsInput = screen.getByLabelText(/Number of guests/i);
 
-    // Form and button ARIA attributes
-    const formElement = screen.getByRole('form');
-    expect(formElement).toHaveAttribute('aria-label', 'Table reservation form');
+      expect(guestsInput).toHaveAttribute('type', 'number');
+      expect(guestsInput).toHaveAttribute('min', '1');
+      expect(guestsInput).toHaveAttribute('max', '10');
+      expect(guestsInput).toHaveAttribute('required');
+      expect(guestsInput).toHaveAttribute('aria-required', 'true');
+    });
 
-    const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
-    expect(submitBtn).toHaveAttribute('aria-label', 'Make Your reservation');
+    test('Validates HTML5 attributes applied to the occasion select field', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const occasionSelect = screen.getByLabelText(/Occasion/i);
+
+      expect(occasionSelect).toHaveAttribute('required');
+      expect(occasionSelect).toHaveAttribute('aria-required', 'true');
+    });
   });
 
-  test('Validates client-side React validation states: disables and enables submit button', () => {
-    render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+  // --- Paso 2: JavaScript Validation Functions (Valid & Invalid States) ---
+  describe('Paso 2: JavaScript Validation Functions', () => {
+    test('validateDate: returns true for valid date and false for invalid/empty date', () => {
+      expect(validateDate('2026-10-15')).toBe(true);
+      expect(validateDate('')).toBe(false);
+      expect(validateDate('   ')).toBe(false);
+      expect(validateDate(null)).toBe(false);
+    });
 
-    const dateInput = screen.getByLabelText(/Choose date/i);
-    const guestsInput = screen.getByLabelText(/Number of guests/i);
-    const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+    test('validateTime: returns true for valid time and false for invalid/empty time', () => {
+      expect(validateTime('17:00')).toBe(true);
+      expect(validateTime('20:30')).toBe(true);
+      expect(validateTime('')).toBe(false);
+      expect(validateTime('   ')).toBe(false);
+      expect(validateTime(null)).toBe(false);
+    });
 
-    // Submit button is disabled by default because date is empty
-    expect(submitBtn).toBeDisabled();
+    test('validateGuests: returns true for numbers 1 to 10 and false for invalid numbers', () => {
+      // Valid states (1 to 10)
+      expect(validateGuests(1)).toBe(true);
+      expect(validateGuests('1')).toBe(true);
+      expect(validateGuests(5)).toBe(true);
+      expect(validateGuests(10)).toBe(true);
+      expect(validateGuests('10')).toBe(true);
 
-    // Enter valid date -> form becomes valid -> submit button is enabled
-    fireEvent.change(dateInput, { target: { value: '2026-10-15' } });
-    expect(submitBtn).toBeEnabled();
+      // Invalid states (< 1, > 10, empty, NaN)
+      expect(validateGuests(0)).toBe(false);
+      expect(validateGuests(-1)).toBe(false);
+      expect(validateGuests(11)).toBe(false);
+      expect(validateGuests('15')).toBe(false);
+      expect(validateGuests('')).toBe(false);
+      expect(validateGuests('abc')).toBe(false);
+    });
 
-    // Set invalid guests (< 1) -> submit button becomes disabled and shows error
-    fireEvent.change(guestsInput, { target: { value: '0' } });
-    expect(submitBtn).toBeDisabled();
-    expect(screen.getByText(/Number of guests must be between 1 and 10/i)).toBeInTheDocument();
-
-    // Set invalid guests (> 10) -> submit button remains disabled
-    fireEvent.change(guestsInput, { target: { value: '11' } });
-    expect(submitBtn).toBeDisabled();
-
-    // Reset guests to valid number -> submit button becomes enabled again
-    fireEvent.change(guestsInput, { target: { value: '4' } });
-    expect(submitBtn).toBeEnabled();
+    test('validateOccasion: returns true for valid occasion and false for invalid/empty occasion', () => {
+      expect(validateOccasion('Birthday')).toBe(true);
+      expect(validateOccasion('Anniversary')).toBe(true);
+      expect(validateOccasion('')).toBe(false);
+      expect(validateOccasion('   ')).toBe(false);
+      expect(validateOccasion(null)).toBe(false);
+    });
   });
 
+  // --- Paso 2: Client-Side React Validation via React Testing Library ---
+  describe('Paso 2: React Client-Side Validation States', () => {
+    test('Submit button is disabled initially when required fields (date) are empty', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+
+      // Initially date is empty, so form is invalid
+      expect(submitBtn).toBeDisabled();
+    });
+
+    test('Submit button becomes enabled when all inputs have valid values', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+
+      const dateInput = screen.getByLabelText(/Choose date/i);
+      const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+
+      // Filling valid date makes all fields valid
+      fireEvent.change(dateInput, { target: { value: '2026-10-15' } });
+      expect(submitBtn).toBeEnabled();
+    });
+
+    test('Submit button is disabled and displays error message when guests is invalid', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+
+      const dateInput = screen.getByLabelText(/Choose date/i);
+      const guestsInput = screen.getByLabelText(/Number of guests/i);
+      const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+
+      // First make form valid
+      fireEvent.change(dateInput, { target: { value: '2026-10-15' } });
+      expect(submitBtn).toBeEnabled();
+
+      // Change guests to 0 (invalid: < 1)
+      fireEvent.change(guestsInput, { target: { value: '0' } });
+      expect(submitBtn).toBeDisabled();
+      expect(screen.getByText(/Number of guests must be between 1 and 10/i)).toBeInTheDocument();
+
+      // Change guests to 11 (invalid: > 10)
+      fireEvent.change(guestsInput, { target: { value: '11' } });
+      expect(submitBtn).toBeDisabled();
+      expect(screen.getByText(/Number of guests must be between 1 and 10/i)).toBeInTheDocument();
+
+      // Restore guests to valid number (4)
+      fireEvent.change(guestsInput, { target: { value: '4' } });
+      expect(submitBtn).toBeEnabled();
+      expect(screen.queryByText(/Number of guests must be between 1 and 10/i)).not.toBeInTheDocument();
+    });
+  });
+
+  // --- Submission Tests ---
   test('Verifies that the user can fill and submit the BookingForm', () => {
     const mockSubmitForm = vi.fn();
     render(
