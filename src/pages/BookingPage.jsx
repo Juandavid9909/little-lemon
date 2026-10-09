@@ -1,6 +1,6 @@
 import BookingForm from '../components/BookingForm';
 
-function BookingPage() {
+function BookingPage({ availableTimes, dispatch }) {
   return (
     <section className="booking-page" aria-labelledby="booking-heading">
       <div className="booking-hero">
@@ -18,7 +18,7 @@ function BookingPage() {
           <p className="booking-card-text">
             Please select your preferred date, time, and number of diners. We look forward to hosting you at Little Lemon!
           </p>
-          <BookingForm />
+          <BookingForm availableTimes={availableTimes} dispatch={dispatch} />
         </div>
       </div>
     </section>

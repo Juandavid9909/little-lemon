@@ -1,30 +1,22 @@
 import { useState } from 'react';
+import { DEFAULT_AVAILABLE_TIMES, DEFAULT_OCCASIONS } from '../constants';
 
-function BookingForm({ availableTimes: propsAvailableTimes, dispatch, submitForm }) {
+function BookingForm({
+  availableTimes = DEFAULT_AVAILABLE_TIMES,
+  dispatch,
+  submitForm,
+}) {
   const [date, setDate] = useState('');
-  const [time, setTime] = useState('17:00');
+  const [time, setTime] = useState(DEFAULT_AVAILABLE_TIMES[0]);
   const [guests, setGuests] = useState(1);
-  const [occasion, setOccasion] = useState('Birthday');
+  const [occasion, setOccasion] = useState(DEFAULT_OCCASIONS[0]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  // State array for available booking times
-  const [availableTimes, setAvailableTimes] = useState([
-    '17:00',
-    '18:00',
-    '19:00',
-    '20:00',
-    '21:00',
-    '22:00',
-  ]);
-
-  // Support both internal state and lifted state via props (for next lesson)
-  const timesOptions = propsAvailableTimes || availableTimes;
 
   const handleDateChange = (e) => {
     const newDate = e.target.value;
     setDate(newDate);
     if (dispatch) {
-      dispatch({ type: 'UPDATE_TIMES', payload: newDate });
+      dispatch({ type: 'UPDATE_TIMES', date: newDate, payload: newDate });
     }
   };
 
@@ -118,7 +110,7 @@ function BookingForm({ availableTimes: propsAvailableTimes, dispatch, submitForm
               onChange={handleTimeChange}
               required
             >
-              {timesOptions.map((timeOption) => (
+              {availableTimes.map((timeOption) => (
                 <option key={timeOption} value={timeOption}>
                   {timeOption}
                 </option>
