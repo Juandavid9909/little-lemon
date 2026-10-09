@@ -1,3 +1,5 @@
+import BookingForm from '../components/BookingForm';
+
 function BookingPage() {
   return (
     <section className="booking-page" aria-labelledby="booking-heading">
@@ -16,10 +18,7 @@ function BookingPage() {
           <p className="booking-card-text">
             Please select your preferred date, time, and number of diners. We look forward to hosting you at Little Lemon!
           </p>
-          <div className="booking-placeholder-box">
-            <p><strong>Table Reservation Form</strong></p>
-            <p>Ready for booking form integration in the next step.</p>
-          </div>
+          <BookingForm />
         </div>
       </div>
     </section>
