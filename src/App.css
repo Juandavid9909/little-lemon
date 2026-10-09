@@ -921,3 +921,95 @@
     margin-right: auto;
   }
 }
+
+/* ==========================================================================
+   Confirmed Booking Page Styles
+   ========================================================================== */
+.confirmed-booking {
+  width: 100%;
+  min-height: 60vh;
+  padding: 4rem 1.5rem;
+  background-color: var(--highlight-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmed-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.confirmed-card {
+  background-color: #ffffff;
+  border: 2px solid var(--primary-green);
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.confirmed-title {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  color: var(--primary-green);
+  margin: 0 0 0.75rem 0;
+  line-height: 1.1;
+}
+
+.confirmed-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--highlight-dark);
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.confirmed-info {
+  background-color: #f9fbf9;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+  border: 1px solid #e2ebe2;
+}
+
+.confirmed-info p {
+  margin: 0.5rem 0;
+  font-size: 1.05rem;
+  color: #333333;
+  line-height: 1.5;
+}
+
+.confirmed-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.confirmed-btn {
+  padding: 0.85rem 1.75rem;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+  border-radius: 16px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-green);
+  color: #ffffff;
+}
