@@ -71,7 +71,7 @@
 }
 
 /* ==========================================================================
-   Hero Section
+   Hero Section / CallToAction
    ========================================================================== */
 .hero-section {
   background-color: var(--primary-green);
@@ -305,6 +305,233 @@
 }
 
 /* ==========================================================================
+   Testimonials Section / CustomersSay
+   ========================================================================== */
+.testimonials-section {
+  background-color: var(--primary-green);
+  width: 100%;
+  padding: 5rem 1.5rem;
+}
+
+.testimonials-container {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.testimonials-title {
+  font-family: var(--font-title);
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: var(--highlight-light);
+  text-align: center;
+  margin: 0 0 3.5rem 0;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+.testimonial-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 1.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+}
+
+.testimonial-rating {
+  color: var(--primary-yellow);
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.testimonial-user {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.testimonial-name {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--highlight-dark);
+  margin: 0;
+}
+
+.testimonial-comment {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--primary-green);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Chicago / About Section
+   ========================================================================== */
+.chicago-section {
+  background-color: #ffffff;
+  width: 100%;
+  padding: 5.5rem 1.5rem;
+}
+
+.chicago-container {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4rem;
+}
+
+.chicago-text {
+  flex: 1 1 500px;
+  max-width: 520px;
+}
+
+.chicago-title {
+  font-family: var(--font-title);
+  font-size: 3.75rem;
+  font-weight: 500;
+  color: var(--primary-green);
+  margin: 0;
+  line-height: 1;
+}
+
+.chicago-subtitle {
+  font-family: var(--font-title);
+  font-size: 2.25rem;
+  font-weight: 400;
+  color: var(--highlight-dark);
+  margin: 0 0 1.5rem 0;
+}
+
+.chicago-description {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #495E57;
+  margin: 0 0 1.25rem 0;
+}
+
+.chicago-images-wrapper {
+  flex: 0 0 400px;
+  height: 380px;
+  position: relative;
+}
+
+.chicago-img {
+  width: 260px;
+  height: 310px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  position: absolute;
+}
+
+.chicago-img-top {
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.chicago-img-bottom {
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Booking Page Layout
+   ========================================================================== */
+.booking-page {
+  width: 100%;
+  min-height: 60vh;
+  background-color: #fafafa;
+}
+
+.booking-hero {
+  background-color: var(--primary-green);
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+}
+
+.booking-hero-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.booking-title {
+  font-family: var(--font-title);
+  font-size: 3.75rem;
+  color: var(--primary-yellow);
+  margin: 0 0 0.5rem 0;
+}
+
+.booking-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--highlight-light);
+  margin: 0;
+}
+
+.booking-content-container {
+  max-width: 760px;
+  margin: -2rem auto 4rem auto;
+  padding: 0 1.5rem;
+}
+
+.booking-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+.booking-card-title {
+  font-family: var(--font-body);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin: 0 0 1rem 0;
+}
+
+.booking-card-text {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--highlight-dark);
+  margin-bottom: 2rem;
+}
+
+.booking-placeholder-box {
+  background-color: var(--highlight-light);
+  border: 2px dashed var(--primary-green);
+  border-radius: 12px;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--primary-green);
+}
+
+/* ==========================================================================
    Footer
    ========================================================================== */
 .footer {
@@ -314,7 +541,6 @@
   background-color: var(--primary-green);
   color: var(--highlight-light);
   padding: 4rem 1.5rem 2rem 1.5rem;
-  margin-top: 2rem;
 }
 
 .footer-container {
@@ -414,6 +640,24 @@
     gap: 1.25rem;
   }
 
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chicago-container {
+    gap: 2rem;
+  }
+
+  .chicago-images-wrapper {
+    flex: 0 0 320px;
+    height: 320px;
+  }
+
+  .chicago-img {
+    width: 210px;
+    height: 260px;
+  }
+
   .footer-container {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -488,6 +732,24 @@
     grid-template-columns: 1fr;
     max-width: 400px;
     margin: 0 auto;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .chicago-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .chicago-images-wrapper {
+    margin-top: 2rem;
+    flex: 0 0 320px;
+    width: 320px;
+    height: 320px;
   }
 
   .footer-container {
