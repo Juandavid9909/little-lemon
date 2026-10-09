@@ -260,7 +260,7 @@ function BookingForm({
           <input
             type="submit"
             value="Make Your reservation"
-            aria-label="Make Your reservation"
+            aria-label="On Click"
             className="btn-primary booking-submit-btn"
             disabled={!isFormValid}
           />

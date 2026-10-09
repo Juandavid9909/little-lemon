@@ -9,7 +9,6 @@ import BookingForm, {
 import { DEFAULT_AVAILABLE_TIMES } from '../../src/constants';
 
 describe('BookingForm Component', () => {
-  // --- Rendering Tests ---
   test('Renders the BookingForm heading', () => {
     render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
     const headingElement = screen.getByText('Book Now');
@@ -24,11 +23,10 @@ describe('BookingForm Component', () => {
     expect(screen.getByText(/Number of guests/i)).toBeInTheDocument();
     expect(screen.getByText(/Occasion/i)).toBeInTheDocument();
 
-    const submitButton = screen.getByRole('button', { name: /Make Your reservation/i });
+    const submitButton = screen.getByRole('button', { name: /On Click/i });
     expect(submitButton).toBeInTheDocument();
   });
 
-  // --- Paso 1: HTML5 Validation for Each Field ---
   describe('Paso 1: HTML5 Validation Attributes', () => {
     test('Validates HTML5 attributes applied to the date input field', () => {
       render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
@@ -68,7 +66,33 @@ describe('BookingForm Component', () => {
     });
   });
 
-  // --- Paso 2: JavaScript Validation Functions (Valid & Invalid States) ---
+  describe('Accessibility & ARIA Attributes', () => {
+    test('Verifies form element ARIA attributes', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const form = screen.getByRole('form');
+      expect(form).toHaveAttribute('aria-label', 'Table reservation form');
+    });
+
+    test('Verifies submit button has aria-label="On Click"', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const submitBtn = screen.getByRole('button', { name: /On Click/i });
+      expect(submitBtn).toHaveAttribute('aria-label', 'On Click');
+    });
+
+    test('Verifies all form labels associate with inputs via htmlFor and matching id', () => {
+      render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+      const dateInput = screen.getByLabelText(/Choose date/i);
+      const timeSelect = screen.getByLabelText(/Choose time/i);
+      const guestsInput = screen.getByLabelText(/Number of guests/i);
+      const occasionSelect = screen.getByLabelText(/Occasion/i);
+
+      expect(dateInput).toHaveAttribute('id', 'res-date');
+      expect(timeSelect).toHaveAttribute('id', 'res-time');
+      expect(guestsInput).toHaveAttribute('id', 'guests');
+      expect(occasionSelect).toHaveAttribute('id', 'occasion');
+    });
+  });
+
   describe('Paso 2: JavaScript Validation Functions', () => {
     test('validateDate: returns true for valid date and false for invalid/empty date', () => {
       expect(validateDate('2026-10-15')).toBe(true);
@@ -86,14 +110,12 @@ describe('BookingForm Component', () => {
     });
 
     test('validateGuests: returns true for numbers 1 to 10 and false for invalid numbers', () => {
-      // Valid states (1 to 10)
       expect(validateGuests(1)).toBe(true);
       expect(validateGuests('1')).toBe(true);
       expect(validateGuests(5)).toBe(true);
       expect(validateGuests(10)).toBe(true);
       expect(validateGuests('10')).toBe(true);
 
-      // Invalid states (< 1, > 10, empty, NaN)
       expect(validateGuests(0)).toBe(false);
       expect(validateGuests(-1)).toBe(false);
       expect(validateGuests(11)).toBe(false);
@@ -111,13 +133,11 @@ describe('BookingForm Component', () => {
     });
   });
 
-  // --- Paso 2: Client-Side React Validation via React Testing Library ---
   describe('Paso 2: React Client-Side Validation States', () => {
     test('Submit button is disabled initially when required fields (date) are empty', () => {
       render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
-      const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+      const submitBtn = screen.getByRole('button', { name: /On Click/i });
 
-      // Initially date is empty, so form is invalid
       expect(submitBtn).toBeDisabled();
     });
 
@@ -125,9 +145,8 @@ describe('BookingForm Component', () => {
       render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
 
       const dateInput = screen.getByLabelText(/Choose date/i);
-      const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+      const submitBtn = screen.getByRole('button', { name: /On Click/i });
 
-      // Filling valid date makes all fields valid
       fireEvent.change(dateInput, { target: { value: '2026-10-15' } });
       expect(submitBtn).toBeEnabled();
     });
@@ -137,30 +156,25 @@ describe('BookingForm Component', () => {
 
       const dateInput = screen.getByLabelText(/Choose date/i);
       const guestsInput = screen.getByLabelText(/Number of guests/i);
-      const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+      const submitBtn = screen.getByRole('button', { name: /On Click/i });
 
-      // First make form valid
       fireEvent.change(dateInput, { target: { value: '2026-10-15' } });
       expect(submitBtn).toBeEnabled();
 
-      // Change guests to 0 (invalid: < 1)
       fireEvent.change(guestsInput, { target: { value: '0' } });
       expect(submitBtn).toBeDisabled();
       expect(screen.getByText(/Number of guests must be between 1 and 10/i)).toBeInTheDocument();
 
-      // Change guests to 11 (invalid: > 10)
       fireEvent.change(guestsInput, { target: { value: '11' } });
       expect(submitBtn).toBeDisabled();
       expect(screen.getByText(/Number of guests must be between 1 and 10/i)).toBeInTheDocument();
 
-      // Restore guests to valid number (4)
       fireEvent.change(guestsInput, { target: { value: '4' } });
       expect(submitBtn).toBeEnabled();
       expect(screen.queryByText(/Number of guests must be between 1 and 10/i)).not.toBeInTheDocument();
     });
   });
 
-  // --- Submission Tests ---
   test('Verifies that the user can fill and submit the BookingForm', () => {
     const mockSubmitForm = vi.fn();
     render(
@@ -174,18 +188,15 @@ describe('BookingForm Component', () => {
     const timeSelect = screen.getByLabelText(/Choose time/i);
     const guestsInput = screen.getByLabelText(/Number of guests/i);
     const occasionSelect = screen.getByLabelText(/Occasion/i);
-    const submitButton = screen.getByRole('button', { name: /Make Your reservation/i });
+    const submitButton = screen.getByRole('button', { name: /On Click/i });
 
-    // Simulate user filling the form inputs
     fireEvent.change(dateInput, { target: { value: '2026-10-15' } });
     fireEvent.change(timeSelect, { target: { value: '18:00' } });
     fireEvent.change(guestsInput, { target: { value: '4' } });
     fireEvent.change(occasionSelect, { target: { value: 'Anniversary' } });
 
-    // Simulate user clicking submit
     fireEvent.click(submitButton);
 
-    // Verify submitForm was called with the entered values
     expect(mockSubmitForm).toHaveBeenCalledTimes(1);
     expect(mockSubmitForm).toHaveBeenCalledWith({
       date: '2026-10-15',
@@ -199,7 +210,7 @@ describe('BookingForm Component', () => {
     render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
 
     const dateInput = screen.getByLabelText(/Choose date/i);
-    const submitButton = screen.getByRole('button', { name: /Make Your reservation/i });
+    const submitButton = screen.getByRole('button', { name: /On Click/i });
 
     fireEvent.change(dateInput, { target: { value: '2026-10-20' } });
     fireEvent.click(submitButton);
