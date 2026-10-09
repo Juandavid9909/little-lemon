@@ -1,15 +1,21 @@
 import { initializeTimes, updateTimes } from '../../src/utils/booking';
-import { DEFAULT_AVAILABLE_TIMES } from '../../src/constants';
+import { fetchAPI } from '../../src/api';
 
 describe('Booking Utilities Unit Tests', () => {
-  test('initializeTimes returns default available times', () => {
+  test('initializeTimes returns available times array for today', () => {
     const times = initializeTimes();
-    expect(times).toEqual(DEFAULT_AVAILABLE_TIMES);
+    expect(Array.isArray(times)).toBe(true);
+    expect(times.length).toBeGreaterThan(0);
   });
 
-  test('updateTimes returns current state or updated times', () => {
-    const state = DEFAULT_AVAILABLE_TIMES;
-    const action = { type: 'UPDATE_TIMES', date: '2026-10-15', payload: '2026-10-15' };
-    expect(updateTimes(state, action)).toEqual(state);
+  test('updateTimes returns available times for a selected date', () => {
+    const state = [];
+    const date = '2026-10-15';
+    const action = { type: 'UPDATE_TIMES', date };
+    const result = updateTimes(state, action);
+
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
+    expect(result).toEqual(fetchAPI(date));
   });
 });

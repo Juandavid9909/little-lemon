@@ -1,10 +1,14 @@
+import { fetchAPI } from '../api';
 import { DEFAULT_AVAILABLE_TIMES } from '../constants';
 
 export const initializeTimes = () => {
-  return DEFAULT_AVAILABLE_TIMES;
+  return fetchAPI(new Date());
 };
 
 export const updateTimes = (state, action) => {
-  // For now, returns the same available times regardless of date
-  return DEFAULT_AVAILABLE_TIMES;
+  const date = action?.date || action?.payload;
+  if (date) {
+    return fetchAPI(date);
+  }
+  return state;
 };
