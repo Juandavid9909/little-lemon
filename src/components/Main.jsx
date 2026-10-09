@@ -2,16 +2,9 @@ import { useReducer } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import BookingPage from '../pages/BookingPage';
-import { DEFAULT_AVAILABLE_TIMES } from '../constants';
+import { initializeTimes, updateTimes } from '../utils';
 
-export const initializeTimes = () => {
-  return DEFAULT_AVAILABLE_TIMES;
-};
-
-export const updateTimes = (state, action) => {
-  // For now, returns the same available times regardless of date
-  return DEFAULT_AVAILABLE_TIMES;
-};
+export { initializeTimes, updateTimes };
 
 function Main() {
   const [availableTimes, dispatch] = useReducer(updateTimes, [], initializeTimes);
