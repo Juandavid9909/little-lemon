@@ -27,11 +27,19 @@ function Chicago() {
             src={marioAndAdrianA}
             alt="Mario and Adrian in the Little Lemon kitchen"
             className="chicago-img chicago-img-top"
+            loading="lazy"
+            decoding="async"
+            width="270"
+            height="330"
           />
           <img
             src={marioAndAdrianB}
             alt="Mario and Adrian preparing food"
             className="chicago-img chicago-img-bottom"
+            loading="lazy"
+            decoding="async"
+            width="270"
+            height="330"
           />
         </div>
       </div>

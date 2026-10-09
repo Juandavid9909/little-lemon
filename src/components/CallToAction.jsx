@@ -21,6 +21,11 @@ function CallToAction() {
             src={heroImage}
             alt="Little Lemon chef serving appetizers"
             className="hero-image"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            width="375"
+            height="420"
           />
         </div>
       </div>

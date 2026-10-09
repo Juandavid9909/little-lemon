@@ -18,7 +18,15 @@ function SpecialCard({ image, title, price, description, deliveryLink = '#' }) {
   return (
     <article className="special-card">
       <div className="card-image-wrapper">
-        <img src={image} alt={title} className="card-image" />
+        <img
+          src={image}
+          alt={title}
+          className="card-image"
+          loading="lazy"
+          decoding="async"
+          width="280"
+          height="185"
+        />
       </div>
       <div className="card-body">
         <div className="card-header">
