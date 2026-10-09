@@ -618,11 +618,39 @@
   width: 100%;
 }
 
-.booking-submit-btn:hover,
-.booking-submit-btn:focus {
+.booking-submit-btn:hover:not(:disabled),
+.booking-submit-btn:focus:not(:disabled) {
   background-color: #e5bd09;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.booking-submit-btn:disabled {
+  background-color: #cccccc;
+  color: #777777;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.form-error {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+.form-input.input-error,
+.form-select.input-error {
+  border-color: #d32f2f;
+  background-color: #fff8f8;
+}
+
+.form-input.input-error:focus,
+.form-select.input-error:focus {
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2);
 }
 
 .booking-confirmation-box {

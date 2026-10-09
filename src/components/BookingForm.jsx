@@ -1,20 +1,49 @@
 import { useState } from 'react';
 import { DEFAULT_AVAILABLE_TIMES, DEFAULT_OCCASIONS } from '../constants';
 
+const getTodayDateString = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 function BookingForm({
   availableTimes = DEFAULT_AVAILABLE_TIMES,
   dispatch,
   submitForm,
 }) {
   const [date, setDate] = useState('');
-  const [time, setTime] = useState(DEFAULT_AVAILABLE_TIMES[0]);
+  const [time, setTime] = useState(availableTimes[0] || DEFAULT_AVAILABLE_TIMES[0]);
   const [guests, setGuests] = useState(1);
   const [occasion, setOccasion] = useState(DEFAULT_OCCASIONS[0]);
+  const [touched, setTouched] = useState({
+    date: false,
+    time: false,
+    guests: false,
+    occasion: false,
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const minDate = getTodayDateString();
+
+  const guestsNum = Number(guests);
+  const isDateValid = Boolean(date && date.trim() !== '');
+  const isTimeValid = Boolean(time && time.trim() !== '');
+  const isGuestsValid = guests !== '' && !isNaN(guestsNum) && guestsNum >= 1 && guestsNum <= 10;
+  const isOccasionValid = Boolean(occasion && occasion.trim() !== '');
+
+  const isFormValid = isDateValid && isTimeValid && isGuestsValid && isOccasionValid;
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
 
   const handleDateChange = (e) => {
     const newDate = e.target.value;
     setDate(newDate);
+    setTouched((prev) => ({ ...prev, date: true }));
     if (dispatch) {
       dispatch({ type: 'UPDATE_TIMES', date: newDate, payload: newDate });
     }
@@ -22,18 +51,31 @@ function BookingForm({
 
   const handleTimeChange = (e) => {
     setTime(e.target.value);
+    setTouched((prev) => ({ ...prev, time: true }));
   };
 
   const handleGuestsChange = (e) => {
     setGuests(e.target.value);
+    setTouched((prev) => ({ ...prev, guests: true }));
   };
 
   const handleOccasionChange = (e) => {
     setOccasion(e.target.value);
+    setTouched((prev) => ({ ...prev, occasion: true }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!isFormValid) {
+      setTouched({
+        date: true,
+        time: true,
+        guests: true,
+        occasion: true,
+      });
+      return;
+    }
+
     const bookingData = { date, time, guests, occasion };
 
     if (submitForm) {
@@ -45,9 +87,15 @@ function BookingForm({
 
   const handleReset = () => {
     setDate('');
-    setTime('17:00');
+    setTime(availableTimes[0] || '17:00');
     setGuests(1);
-    setOccasion('Birthday');
+    setOccasion(DEFAULT_OCCASIONS[0]);
+    setTouched({
+      date: false,
+      time: false,
+      guests: false,
+      occasion: false,
+    });
     setIsSubmitted(false);
   };
 
@@ -95,15 +143,24 @@ function BookingForm({
             <input
               type="date"
               id="res-date"
-              className="form-input"
+              name="res-date"
+              className={`form-input ${touched.date && !isDateValid ? 'input-error' : ''}`}
               value={date}
+              min={minDate}
               onChange={handleDateChange}
+              onBlur={() => handleBlur('date')}
               required
               aria-required="true"
+              aria-invalid={touched.date && !isDateValid}
               aria-labelledby="date-label"
               aria-label="Choose reservation date"
-              aria-describedby="required-legend"
+              aria-describedby={touched.date && !isDateValid ? 'date-error' : 'required-legend'}
             />
+            {touched.date && !isDateValid && (
+              <p id="date-error" className="form-error" role="alert">
+                Please choose a valid reservation date
+              </p>
+            )}
           </div>
 
           <div className="form-group">
@@ -112,14 +169,17 @@ function BookingForm({
             </label>
             <select
               id="res-time"
-              className="form-select"
+              name="res-time"
+              className={`form-select ${touched.time && !isTimeValid ? 'input-error' : ''}`}
               value={time}
               onChange={handleTimeChange}
+              onBlur={() => handleBlur('time')}
               required
               aria-required="true"
+              aria-invalid={touched.time && !isTimeValid}
               aria-labelledby="time-label"
               aria-label="Choose reservation time"
-              aria-describedby="required-legend"
+              aria-describedby={touched.time && !isTimeValid ? 'time-error' : 'required-legend'}
             >
               {availableTimes.map((timeOption) => (
                 <option key={timeOption} value={timeOption}>
@@ -127,6 +187,11 @@ function BookingForm({
                 </option>
               ))}
             </select>
+            {touched.time && !isTimeValid && (
+              <p id="time-error" className="form-error" role="alert">
+                Please choose a reservation time
+              </p>
+            )}
           </div>
 
           <div className="form-group">
@@ -139,32 +204,51 @@ function BookingForm({
               min="1"
               max="10"
               id="guests"
-              className="form-input"
+              name="guests"
+              className={`form-input ${touched.guests && !isGuestsValid ? 'input-error' : ''}`}
               value={guests}
               onChange={handleGuestsChange}
+              onBlur={() => handleBlur('guests')}
               required
               aria-required="true"
+              aria-invalid={touched.guests && !isGuestsValid}
               aria-labelledby="guests-label"
               aria-label="Number of guests"
-              aria-describedby="required-legend"
+              aria-describedby={touched.guests && !isGuestsValid ? 'guests-error' : 'required-legend'}
             />
+            {touched.guests && !isGuestsValid && (
+              <p id="guests-error" className="form-error" role="alert">
+                Number of guests must be between 1 and 10
+              </p>
+            )}
           </div>
 
           <div className="form-group">
             <label htmlFor="occasion" id="occasion-label" className="form-label">
-              Occasion
+              Occasion <span className="required-asterisk" aria-hidden="true">*</span>
             </label>
             <select
               id="occasion"
-              className="form-select"
+              name="occasion"
+              className={`form-select ${touched.occasion && !isOccasionValid ? 'input-error' : ''}`}
               value={occasion}
               onChange={handleOccasionChange}
+              onBlur={() => handleBlur('occasion')}
+              required
+              aria-required="true"
+              aria-invalid={touched.occasion && !isOccasionValid}
               aria-labelledby="occasion-label"
               aria-label="Select occasion"
+              aria-describedby={touched.occasion && !isOccasionValid ? 'occasion-error' : undefined}
             >
               <option value="Birthday">Birthday</option>
               <option value="Anniversary">Anniversary</option>
             </select>
+            {touched.occasion && !isOccasionValid && (
+              <p id="occasion-error" className="form-error" role="alert">
+                Please select an occasion
+              </p>
+            )}
           </div>
 
           <input
@@ -172,6 +256,7 @@ function BookingForm({
             value="Make Your reservation"
             aria-label="Make Your reservation"
             className="btn-primary booking-submit-btn"
+            disabled={!isFormValid}
           />
         </form>
       )}

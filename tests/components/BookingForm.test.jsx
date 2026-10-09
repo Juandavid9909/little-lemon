@@ -31,6 +31,7 @@ describe('BookingForm Component', () => {
     const dateInput = screen.getByLabelText(/Choose date/i);
     expect(dateInput).toHaveAttribute('type', 'date');
     expect(dateInput).toHaveAttribute('required');
+    expect(dateInput).toHaveAttribute('min');
     expect(dateInput).toHaveAttribute('aria-required', 'true');
     expect(dateInput).toHaveAttribute('aria-label', 'Choose reservation date');
 
@@ -49,12 +50,45 @@ describe('BookingForm Component', () => {
     expect(guestsInput).toHaveAttribute('aria-required', 'true');
     expect(guestsInput).toHaveAttribute('aria-label', 'Number of guests');
 
+    // Occasion select
+    const occasionSelect = screen.getByLabelText(/Occasion/i);
+    expect(occasionSelect).toHaveAttribute('required');
+    expect(occasionSelect).toHaveAttribute('aria-required', 'true');
+
     // Form and button ARIA attributes
     const formElement = screen.getByRole('form');
     expect(formElement).toHaveAttribute('aria-label', 'Table reservation form');
 
     const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
     expect(submitBtn).toHaveAttribute('aria-label', 'Make Your reservation');
+  });
+
+  test('Validates client-side React validation states: disables and enables submit button', () => {
+    render(<BookingForm availableTimes={DEFAULT_AVAILABLE_TIMES} />);
+
+    const dateInput = screen.getByLabelText(/Choose date/i);
+    const guestsInput = screen.getByLabelText(/Number of guests/i);
+    const submitBtn = screen.getByRole('button', { name: /Make Your reservation/i });
+
+    // Submit button is disabled by default because date is empty
+    expect(submitBtn).toBeDisabled();
+
+    // Enter valid date -> form becomes valid -> submit button is enabled
+    fireEvent.change(dateInput, { target: { value: '2026-10-15' } });
+    expect(submitBtn).toBeEnabled();
+
+    // Set invalid guests (< 1) -> submit button becomes disabled and shows error
+    fireEvent.change(guestsInput, { target: { value: '0' } });
+    expect(submitBtn).toBeDisabled();
+    expect(screen.getByText(/Number of guests must be between 1 and 10/i)).toBeInTheDocument();
+
+    // Set invalid guests (> 10) -> submit button remains disabled
+    fireEvent.change(guestsInput, { target: { value: '11' } });
+    expect(submitBtn).toBeDisabled();
+
+    // Reset guests to valid number -> submit button becomes enabled again
+    fireEvent.change(guestsInput, { target: { value: '4' } });
+    expect(submitBtn).toBeEnabled();
   });
 
   test('Verifies that the user can fill and submit the BookingForm', () => {
