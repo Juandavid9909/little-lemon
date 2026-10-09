@@ -13,8 +13,8 @@ function BookingPage({ availableTimes, dispatch }) {
       </div>
 
       <div className="booking-content-container">
-        <div className="booking-card">
-          <h2 className="booking-card-title">Bookings & Reservations</h2>
+        <div className="booking-card" role="region" aria-labelledby="booking-card-title">
+          <h2 id="booking-card-title" className="booking-card-title">Bookings & Reservations</h2>
           <p className="booking-card-text">
             Please select your preferred date, time, and number of diners. We look forward to hosting you at Little Lemon!
           </p>

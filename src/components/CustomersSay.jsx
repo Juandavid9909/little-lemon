@@ -38,14 +38,14 @@ function CustomersSay() {
         </h2>
         <div className="testimonials-grid">
           {testimonials.map((item) => (
-            <article key={item.id} className="testimonial-card">
-              <div className="testimonial-rating" aria-label={`${item.rating} out of 5 stars`}>
-                {'★'.repeat(item.rating)}
+            <article key={item.id} className="testimonial-card" aria-label={`Testimonial from ${item.name}`}>
+              <div className="testimonial-rating" role="img" aria-label={`${item.rating} out of 5 stars`}>
+                <span aria-hidden="true">{'★'.repeat(item.rating)}</span>
               </div>
               <div className="testimonial-user">
                 <img
                   src={item.avatar}
-                  alt={item.name}
+                  alt={`${item.name}'s photo`}
                   className="testimonial-avatar"
                   loading="lazy"
                 />

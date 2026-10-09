@@ -545,6 +545,15 @@
   gap: 1.5rem;
 }
 
+.booking-form-heading {
+  font-family: var(--font-body);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin: 0;
+  text-align: left;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

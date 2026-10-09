@@ -16,7 +16,7 @@ function DeliveryIcon() {
 
 function SpecialCard({ image, title, price, description, deliveryLink = '#' }) {
   return (
-    <article className="special-card">
+    <article className="special-card" aria-label={title}>
       <div className="card-image-wrapper">
         <img
           src={image}
@@ -35,7 +35,11 @@ function SpecialCard({ image, title, price, description, deliveryLink = '#' }) {
         </div>
         <p className="card-description">{description}</p>
         <div className="card-footer">
-          <a href={deliveryLink} className="card-delivery-link">
+          <a
+            href={deliveryLink}
+            className="card-delivery-link"
+            aria-label={`Order ${title} for delivery`}
+          >
             <span>Order a delivery</span>
             <DeliveryIcon />
           </a>

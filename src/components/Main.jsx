@@ -10,7 +10,7 @@ function Main() {
   const [availableTimes, dispatch] = useReducer(updateTimes, [], initializeTimes);
 
   return (
-    <main className="main">
+    <main className="main" id="main-content" role="main">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
